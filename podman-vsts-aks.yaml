@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azdevops-deployment 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: azdevops-agent
+  template:
+    metadata:
+      labels:
+        app: azdevops-agent
+    spec:
+      containers:
+      - name: selfhosted-agents
+        image: docker.io/pankajdhami/podman-vsts:v1
+        ports:
+        - containerPort: 80
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: AZP_URL
+          value: AZP_URL_VALUE
+        - name: AZP_TOKEN
+          value: AZP_TOKEN_VALUE
+        - name: AZP_POOL
+          value: AZP_POOL_VALUE
+        securityContext:
+          privileged: true
+      # imagePullSecrets:
+      #   - name: acr-secret
